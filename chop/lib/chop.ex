@@ -1,16 +1,12 @@
 defmodule Chop do
-  def guess(value, from..to) when ! value in from..to do
-    []
-  end
+  def guess(value, from..to) when ! value in from..to, do: []
+
+  def guess(_, from..to) when from == to, do: [{ :answer, from }]
 
   def guess(value, range) do
     guesses = do_guess(value, range, [])
     { :guess, found } = List.last(guesses)
     guesses ++ [{:answer, found}]
-  end
-
-  defp do_guess(_, from..to, guesses) when from == to do
-    Enum.reverse(guesses) ++ [{ :guess, from }]
   end
 
   defp do_guess(value, from.._, guesses) when from == value do

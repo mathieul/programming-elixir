@@ -4,7 +4,7 @@ defmodule ChopTest do
   use ExUnit.Case
 
   test "return answer directly if range just has that one element" do
-    assert Chop.guess(273, 273..273) == [{ :guess, 273}, { :answer, 273}]
+    assert Chop.guess(273, 273..273) == [{ :answer, 273 }]
   end
 
   test "return an empty list if the value is not in the range" do
