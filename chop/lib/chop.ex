@@ -1,12 +1,12 @@
 defmodule Chop do
+  def guess(value, from..to) when ! value in from..to do
+    []
+  end
+
   def guess(value, range) do
-    if value in range do
-      guesses = do_guess(value, range, [])
-      { :guess, found } = List.last(guesses)
-      guesses ++ [{:answer, found}]
-    else
-      []
-    end
+    guesses = do_guess(value, range, [])
+    { :guess, found } = List.last(guesses)
+    guesses ++ [{:answer, found}]
   end
 
   defp do_guess(_, from..to, guesses) when from == to do
