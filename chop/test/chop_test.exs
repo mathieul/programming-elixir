@@ -3,6 +3,8 @@ Code.require_file "test_helper.exs", __DIR__
 defmodule ChopTest do
   use ExUnit.Case
 
+  doctest Chop
+
   test "return answer directly if range just has that one element" do
     assert Chop.guess(273, 273..273) == [{ :answer, 273 }]
   end

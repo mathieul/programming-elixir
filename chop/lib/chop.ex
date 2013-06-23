@@ -1,4 +1,10 @@
 defmodule Chop do
+  @doc """
+  Guess a value from a range until the answer.
+
+      iex> Chop.guess(42, 1..100)
+      [guess: 50, guess: 25, guess: 37, guess: 43, guess: 40, guess: 41, guess: 42, answer: 42]
+  """
   def guess(value, from..to) when ! value in from..to, do: []
 
   def guess(_, from..to) when from == to, do: [{ :answer, from }]
