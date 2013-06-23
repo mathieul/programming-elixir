@@ -24,5 +24,16 @@ defmodule MyString do
   iex> MyString.calculate("123 + 27")
   150
   """
-  def calculate(expression), do: 0
+  def calculate(expression) do
+    extractor = %r/\A(\d+)\s*(\+|-)\s*(\d+)\Z/
+    if (match = Regex.run extractor, expression) do
+      [_, a, op, b] = match
+      do_calculate(a, op, b)
+    else
+      0
+    end
+  end
+
+  defp do_calculate(a, "+", b), do: binary_to_integer(a) + binary_to_integer(b)
+  defp do_calculate(a, "-", b), do: binary_to_integer(a) - binary_to_integer(b)
 end
