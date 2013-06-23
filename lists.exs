@@ -36,4 +36,19 @@ defmodule MyList do
     do_caesar(list, translation, [result | encoding])
   end
 
+  @doc """
+  MyList.flatten([ 1, [ 2, 3, [4] ], 5, [[[6]]]])
+  iex> [1,2,3,4,5,6]
+  """
+  def flatten(list), do: Enum.reverse do_flatten(list, [])
+
+  def do_flatten([], flat), do: flat
+
+  def do_flatten([item | list], flat) do
+    if is_list(item) do
+      do_flatten(list, do_flatten(item, []) ++ flat)
+    else
+      do_flatten(list, [item | flat])
+    end
+  end
 end
