@@ -1,3 +1,0 @@
-# Chop
-
-** TODO: Add description **

@@ -1,6 +1,6 @@
-defmodule MyList do
+defmodule Lists do
   @doc """
-  MyList.mapsum [1, 2, 3], &1 * &1
+  Lists.mapsum [1, 2, 3], &1 * &1
   iex> 14
   """
   def mapsum(list, summer), do: do_mapsum(list, summer, 0)
@@ -12,7 +12,7 @@ defmodule MyList do
   end
 
   @doc """
-  MyList.max [2, 6, 1, 14, 9]
+  Lists.max [2, 6, 1, 14, 9]
   iex> 14
   """
   def max(list), do: do_max(list, 0)
@@ -24,7 +24,7 @@ defmodule MyList do
   end
 
   @doc """
-  MyList.caesar 'HAL', 1
+  Lists.caesar 'HAL', 1
   iex> IBM
   """
   def caesar(list, translation), do: do_caesar(list, translation, '')
@@ -37,7 +37,7 @@ defmodule MyList do
   end
 
   @doc """
-  MyList.flatten([ 1, [ 2, 3, [4] ], 5, [[[6]]]])
+  Lists.flatten([ 1, [ 2, 3, [4] ], 5, [[[6]]]])
   iex> [1,2,3,4,5,6]
   """
   def flatten(list), do: Enum.reverse do_flatten(list, [])

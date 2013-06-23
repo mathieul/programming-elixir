@@ -1,8 +1,8 @@
-defmodule Chop.Mixfile do
+defmodule Exercises.Mixfile do
   use Mix.Project
 
   def project do
-    [ app: :chop,
+    [ app: :exercises,
       version: "0.0.1",
       deps: deps ]
   end
