@@ -97,4 +97,35 @@ defmodule MyList do
   defp is_prime?(n) do
     [] == lc by inlist span(2, n - 1), rem(n, by) == 0, do: by
   end
+
+  @doc """
+  Function merge_tax
+  iex> tax_rates = [ NC: 0.075, TX: 0.08 ]
+  ...> orders = [
+  ...> [ id: 123, ship_to: :NC, net_amount: 100.00 ],
+  ...> [ id: 124, ship_to: :OK, net_amount:  35.50 ],
+  ...> [ id: 125, ship_to: :TX, net_amount:  24.00 ],
+  ...> [ id: 126, ship_to: :TX, net_amount:  44.80 ],
+  ...> [ id: 127, ship_to: :NC, net_amount:  25.00 ],
+  ...> [ id: 128, ship_to: :MA, net_amount:  10.00 ],
+  ...> [ id: 129, ship_to: :CA, net_amount: 102.00 ],
+  ...> [ id: 120, ship_to: :NC, net_amount:  50.00 ] ]
+  ...> MyList.merge_tax orders, tax_rates
+  [[ id: 123, ship_to: :NC, net_amount: 100.00, tax_rate: 0.075 ],
+   [ id: 124, ship_to: :OK, net_amount:  35.50, tax_rate: nil ],
+   [ id: 125, ship_to: :TX, net_amount:  24.00, tax_rate: 0.08 ],
+   [ id: 126, ship_to: :TX, net_amount:  44.80, tax_rate: 0.08 ],
+   [ id: 127, ship_to: :NC, net_amount:  25.00, tax_rate: 0.075 ],
+   [ id: 128, ship_to: :MA, net_amount:  10.00, tax_rate: nil ],
+   [ id: 129, ship_to: :CA, net_amount: 102.00, tax_rate: nil ],
+   [ id: 120, ship_to: :NC, net_amount:  50.00, tax_rate: 0.075 ]]
+  """
+  def merge_tax(orders, rates), do: do_merge_tax(orders, rates, [])
+
+  defp do_merge_tax([], _, results), do: Enum.reverse(results)
+  defp do_merge_tax([order | orders], rates, results) do
+    state = order[:ship_to]
+    merged = List.keystore(order, :tax_rate, 0, {:tax_rate, rates[state]})
+    do_merge_tax(orders, rates, [merged | results])
+  end
 end
