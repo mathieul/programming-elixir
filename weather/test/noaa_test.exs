@@ -10,7 +10,7 @@ defmodule NoaaTest do
   end
 
   defp ksfo_fixture do
-    """
+    '''
     <?xml version="1.0" encoding="ISO-8859-1"?>
     <?xml-stylesheet href="latest_ob.xsl" type="text/xsl"?>
     <current_observation version="1.0"
@@ -60,6 +60,6 @@ defmodule NoaaTest do
       <copyright_url>http://weather.gov/disclaimer.html</copyright_url>
       <privacy_policy_url>http://weather.gov/notice.html</privacy_policy_url>
     </current_observation>
-    """
+    '''
   end
 end
