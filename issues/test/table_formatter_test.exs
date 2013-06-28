@@ -3,6 +3,8 @@ Code.require_file "test_helper.exs", __DIR__
 defmodule TableFormatterTest do
   use ExUnit.Case
 
+  doctest Issues.TableFormatter
+
   alias Issues.TableFormatter, as: TF
 
   def simple_test_data do
