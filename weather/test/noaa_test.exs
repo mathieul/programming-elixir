@@ -3,15 +3,23 @@ Code.require_file "test_helper.exs", __DIR__
 defmodule NoaaTest do
   use ExUnit.Case
 
-  import Weather.NOAA, only: [extract_location: 1]
+  import Weather.NOAA
 
   test "extract location from current obs XML with #extract_location" do
     assert extract_location(ksfo_fixture) == "San Francisco Intl Airport, CA"
   end
 
-  test "extract observation_time_rfc822"
-  test "extract weather"
-  text "extract temperature_string"
+  test "extract observation_time_rfc822" do
+    assert extract_time(ksfo_fixture) == "Thu, 27 Jun 2013 21:56:00 -0700"
+  end
+
+  test "extract weather" do
+    assert extract_weather(ksfo_fixture) == "A Few Clouds"
+  end
+
+  test "extract temperature_string" do
+    assert extract_temperature(ksfo_fixture) == "62.0 F (16.7 C)"
+  end
 
   defp ksfo_fixture do
     """

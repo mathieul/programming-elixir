@@ -1,8 +1,6 @@
 defmodule Weather.NOAA do
   alias HTTPotion.Response
 
-  @re_location %r{<location>([^<]+)</location>}g
-
   def fetch_current_obs(location_code) do
     case HTTPotion.get(current_obs_url(location_code)) do
       Response[body: body, status_code: status, headers: _headers]
@@ -18,9 +16,26 @@ defmodule Weather.NOAA do
   end
 
   def extract_location(xml) do
-    case Regex.run(@re_location, xml) do
-      [_, location] -> location
-      _             -> ""
+    extract_tag_value("location", xml)
+  end
+
+  def extract_time(xml) do
+    extract_tag_value("observation_time_rfc822", xml)
+  end
+
+  def extract_weather(xml) do
+    extract_tag_value("weather", xml)
+  end
+
+  def extract_temperature(xml) do
+    extract_tag_value("temperature_string", xml)
+  end
+
+  defp extract_tag_value(tag, xml) do
+    re = %r{<#{tag}>([^<]+)</#{tag}>}g
+    case Regex.run(re, xml) do
+      [_, value] -> value
+      _          -> ""
     end
   end
 end
