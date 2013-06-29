@@ -31,11 +31,11 @@ defmodule Weather.CLI do
   def process({ location_codes, true }) do
     me = self
     printer = spawn_link fn ->
-      column_widths = [5, 30, 20, 30, 20]
+      column_widths = [4, 35, 30, 20, 16]
       format = Weather.TableFormatter.format_for(column_widths)
       Weather.TableFormatter.puts_one_line_in_columns(@headers, format)
       IO.puts Weather.TableFormatter.separator(column_widths)
-      Enum.each location_codes, fn ->
+      Enum.each location_codes, fn _code ->
         receive do
           { :weather, row } ->
             Weather.TableFormatter.puts_in_columns([row], @headers, format)
