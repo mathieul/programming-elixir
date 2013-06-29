@@ -11,6 +11,6 @@ defmodule CliTest do
   end
 
   test "#parse_args with location code returns it" do
-    assert parse_args(["KSQL"]) == "KSQL"
+    assert parse_args(["KSQL", "KSFO", "KHWD"]) == ["KSQL", "KSFO", "KHWD"]
   end
 end

@@ -1,6 +1,19 @@
 defmodule Weather.NOAA do
   alias HTTPotion.Response
 
+  def get_current_weather_for_locations(location_codes) do
+    get_current_weather_for_locations(location_codes, [])
+  end
+
+  defp get_current_weather_for_locations([], acc), do: Enum.reverse(acc)
+  defp get_current_weather_for_locations([code | rest], acc) do
+    info = case code do
+      {value, xml} -> get_current_weather(value, xml)
+      value        -> get_current_weather(value)
+    end
+    get_current_weather_for_locations(rest, [info | acc])
+  end
+
   def get_current_weather(location_code) do
     get_current_weather(location_code, fetch_current_obs(location_code))
   end
