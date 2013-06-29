@@ -4,7 +4,7 @@ defmodule Weather.CLI do
       |> parse_args
       |> process
   end
-  
+
 
   def parse_args(args) do
     case OptionParser.parse(args, switches: [help: :boolean], aliases: [h: :help]) do
@@ -22,6 +22,8 @@ defmodule Weather.CLI do
   end
 
   def process(location_code) do
-    IO.puts "TODO"
-  end  
+    weather = Weather.NOAA.get_current_weather(location_code)
+    Weather.TableFormatter.print_table_for_columns([weather],
+      ["code", "location", "time", "weather", "temperature"])
+  end
 end

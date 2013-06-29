@@ -21,6 +21,16 @@ defmodule NoaaTest do
     assert extract_temperature(ksfo_fixture) == "62.0 F (16.7 C)"
   end
 
+  test "returns current weather for location code with #get_current_weather" do
+    assert get_current_weather("KSFO", ksfo_fixture) == [
+      { "code",        "KSFO" },
+      { "location",    "San Francisco Intl Airport, CA" },
+      { "time",        "Thu, 27 Jun 2013 21:56:00 -0700" },
+      { "weather",     "A Few Clouds" },
+      { "temperature", "62.0 F (16.7 C)" }
+    ]
+  end
+
   defp ksfo_fixture do
     """
     <?xml version="1.0" encoding="ISO-8859-1"?>

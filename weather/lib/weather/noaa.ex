@@ -1,6 +1,20 @@
 defmodule Weather.NOAA do
   alias HTTPotion.Response
 
+  def get_current_weather(location_code) do
+    get_current_weather(location_code, fetch_current_obs(location_code))
+  end
+
+  def get_current_weather(location_code, xml) do
+    [
+      { "code",        location_code            },
+      { "location",    extract_location(xml)    },
+      { "time",        extract_time(xml)        },
+      { "weather",     extract_weather(xml)     },
+      { "temperature", extract_temperature(xml) }
+    ]
+  end
+
   def fetch_current_obs(location_code) do
     case HTTPotion.get(current_obs_url(location_code)) do
       Response[body: body, status_code: status, headers: _headers]
@@ -9,6 +23,7 @@ defmodule Weather.NOAA do
       Response[body: body, status_code: _status, headers: _headers]
         -> { :error, body }
     end
+    body
   end
 
   def current_obs_url(location_code) do
