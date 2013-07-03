@@ -20,10 +20,13 @@ defmodule Tick do
 
       after @interval ->
         IO.puts "tick"
-        Enum.each clients, fn client ->
+        if length(clients) > 0 do
+          [ client | rest ] = clients
           client <- { :tick }
+          generator(rest ++ [client])
+        else
+          generator([])
         end
-        generator(clients)
     end
   end
 end
