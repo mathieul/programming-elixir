@@ -1,6 +1,8 @@
 defmodule Stack.Server do
   use GenServer.Behaviour
 
+  @vsn "0"
+
   #####
   # External API
 
