@@ -24,12 +24,12 @@ defmodule Scheduler do
 
   def schedule_processes(processes, queue, results) do
     receive do
-      { :receive, pid } when length(queue) > 0 ->
+      { :ready, pid } when length(queue) > 0 ->
         [ next | tail ] = queue
         pid <- { :fib, next, self }
         schedule_processes(processes, tail, results)
 
-      { :receive, pid } ->
+      { :ready, pid } ->
         pid <- { :shutdown }
         if length(processes) > 1 do
           schedule_processes(List.delete(processes, pid), queue, results)
@@ -43,19 +43,14 @@ defmodule Scheduler do
   end
 end
 
-# to_process = [27, 33, 35, 11, 36, 29, 18, 37, 21, 31, 19, 10, 14, 30,
-#               15, 17, 23, 28, 25, 34, 22, 20, 13, 16, 32, 12, 26, 24]
+to_process = [27, 33, 35, 11, 36, 29, 18, 37, 21, 31, 19, 10, 14, 30,
+              15, 17, 23, 28, 25, 34, 22, 20, 13, 16, 32, 12, 26, 24]
 
-# Enum.each 1..10, fn num_processes ->
-#   {time, result} = :timer.tc(Scheduler, :run, [num_processes, FibSolver, :fib, to_process])
-#   if num_processes == 1 do
-#     IO.puts inspect result
-#     IO.puts "\n #   time (s)"
-#   end
-#   :io.format "~2B     ~.2f~n", [num_processes, time/1000000.0]
-# end
-
-{time, result} = :timer.tc(Scheduler, :run, [1, FibSolver, :fib, [27]])
-IO.puts inspect result
-IO.puts "\n #   time (s)"
-:io.format "~2B     ~.2f~n", [1, time/1000000.0]
+Enum.each 1..10, fn num_processes ->
+  {time, result} = :timer.tc(Scheduler, :run, [num_processes, FibSolver, :fib, to_process])
+  if num_processes == 1 do
+    IO.puts inspect result
+    IO.puts "\n #   time (s)"
+  end
+  :io.format "~2B     ~.2f~n", [num_processes, time / 1000000.0]
+end
