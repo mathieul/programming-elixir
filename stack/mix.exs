@@ -10,7 +10,7 @@ defmodule Stack.Mixfile do
   # Configuration for the OTP application
   def application do
     [
-      mod: { Stack, [] },
+      mod: { Stack, { [], nil } },
       registered: [ :stack ]
     ]
   end

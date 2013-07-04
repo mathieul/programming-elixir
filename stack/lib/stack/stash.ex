@@ -11,7 +11,7 @@ defmodule Stack.Stash do
   #####
   # GenServer implementation
 
-  def init(list) when is_list(list), do: { :ok, list }
-  def handle_call(:get_value, _from, list), do: { :reply, list, list }
-  def handle_cast({ :save_value, new_list }, _list), do: { :noreply, new_list }
+  def init(initial), do: { :ok, initial }
+  def handle_call(:get_value, _from, value), do: { :reply, value, value }
+  def handle_cast({ :save_value, new_value }, _value), do: { :noreply, new_value }
 end

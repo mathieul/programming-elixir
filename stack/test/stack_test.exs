@@ -11,4 +11,14 @@ defmodule StackTest do
     assert Stack.Server.pop == "the"
     assert Stack.Server.pop == :hello
   end
+
+  test "it can return the last value popped" do
+    Stack.Server.push(42)
+    assert Stack.Server.pop == 42
+    assert Stack.Server.last == 42
+    Stack.Server.push(:go)
+    assert Stack.Server.last == 42
+    assert Stack.Server.pop == :go
+    assert Stack.Server.last == :go
+  end
 end

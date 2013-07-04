@@ -4,14 +4,14 @@ defmodule Stack.Supervisor do
   #####
   # External API
 
-  def start_link(initial_list) do
+  def start_link(initial) do
     result = { :ok, sup } = :supervisor.start_link(__MODULE__, [])
-    start_workers(sup, initial_list)
+    start_workers(sup, initial)
     result
   end
 
-  def start_workers(sup, initial_list) do
-    { :ok, stash } = :supervisor.start_child(sup, worker(Stack.Stash, [ initial_list ]))
+  def start_workers(sup, initial) do
+    { :ok, stash } = :supervisor.start_child(sup, worker(Stack.Stash, [ initial ]))
     :supervisor.start_child(sup, supervisor(Stack.SubSupervisor, [ stash ]))
   end
 

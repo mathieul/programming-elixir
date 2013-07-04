@@ -1,7 +1,7 @@
 defmodule Stack.Server do
   use GenServer.Behaviour
 
-  @vsn "0"
+  @vsn "1"
 
   #####
   # External API
@@ -12,28 +12,33 @@ defmodule Stack.Server do
 
   def push(item), do: :gen_server.cast(:stack, { :push, item })
   def pop, do: :gen_server.call(:stack, :pop)
+  def last, do: :gen_server.call(:stack, :last)
   def kill, do: :gen_server.cast(:stack, :die)
 
   #####
   # GenServer implementation
 
   def init(stash_pid) do
-    current_list = Stack.Stash.get_value(stash_pid)
-    { :ok, {current_list, stash_pid} }
+    state = Stack.Stash.get_value(stash_pid)
+    { :ok, {state, stash_pid} }
   end
 
-  def handle_call(:pop, _from, {current_list, stash_pid}) do
+  def handle_call(:pop, _from, { { current_list, last }, stash_pid }) do
     if length(current_list) == 0 do
       IO.puts "stack: list is empty, exiting..."
-      { :stop, { :empty_list, [] }, {current_list, stash_pid} }
+      { :stop, { :empty_list, [] }, { { current_list, last }, stash_pid } }
     else
       [ popped | remaining ] = current_list
-      { :reply, popped, {remaining, stash_pid} }
+      { :reply, popped, { { remaining, popped }, stash_pid } }
     end
   end
 
-  def handle_cast({ :push, element }, {current_list, stash_pid}) do
-    { :noreply, {[ element | current_list ], stash_pid} }
+  def handle_call(:last, _from, state = { { _list, last }, _stash_pid }) do
+    { :reply, last, state }
+  end
+
+  def handle_cast({ :push, element }, { { current_list, last }, stash_pid}) do
+    { :noreply, { { [ element | current_list ], last }, stash_pid } }
   end
 
   def handle_cast(:die, state), do: { :stop, :killed, state }
@@ -43,12 +48,17 @@ defmodule Stack.Server do
     { :noreply, state }
   end
 
-  def terminate(reason, {current_list, stash_pid}) do
-    Stack.Stash.save_value(stash_pid, current_list)
+  def terminate(reason, { state, stash_pid }) do
+    Stack.Stash.save_value(stash_pid, state)
     IO.puts "stack server is terminating (#{inspect reason})"
   end
 
   def format_status(_reason, [ _pdict, state ]) do
-    [ data: [ { 'State', "full list content: #{inspect state}" } ] ]
+    [ data: [ { 'State', "current list and last popped: #{inspect state}" } ] ]
+  end
+
+  def code_change("0", old_state, _extra) do
+    IO.puts "Changing code from 0 to #{@vsn}"
+    { :ok, { old_state, nil } }
   end
 end
