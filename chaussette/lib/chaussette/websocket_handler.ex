@@ -3,10 +3,10 @@ defmodule Chaussette.WebsocketHandler do
 
   alias Chaussette.Pubsub
 
-  def websocket_init(_transport_name, req, _opts) do
-    { room_id, _ } = :cowboy_req.qs_val("room_id", req, nil)
+  def websocket_init(_transport_name, req, [ conn: conn ]) do
+    room_id = conn.params[:room_id]
     if room_id, do: Pubsub.register(room_id, self)
-    { :ok, req, { room_id } }
+    { :ok, req, [ room: room_id ] }
   end
 
   def websocket_handle( { :text, message }, req, state) do
@@ -20,8 +20,8 @@ defmodule Chaussette.WebsocketHandler do
   def websocket_info(_data, req, state), do: { :ok, req, state }
 
   def websocket_terminate(_reason, _req, state) do
-    { room_id } = state
-    Pubsub.unregister(room_id, self)
+    [ room: room ] = state
+    Pubsub.unregister(room, self)
     :ok
   end
 end

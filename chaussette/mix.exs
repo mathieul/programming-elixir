@@ -20,6 +20,7 @@ defmodule Chaussette.Mixfile do
 
   defp deps do
     [ { :cowboy, github: "extend/cowboy" },
+      { :websocket_client, github: "jeremyong/websocket_client" },
       { :dynamo, path: "../../../Vendor/dynamo" } ]
   end
 end

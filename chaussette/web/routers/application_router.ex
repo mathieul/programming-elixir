@@ -16,7 +16,5 @@ defmodule ApplicationRouter do
     end
   end
 
-  get "/web-socket" do
-    conn.upgrade_to_websocket Chaussette.WebsocketHandler
-  end
+  websocket "/web-socket", using: Chaussette.WebsocketHandler
 end
