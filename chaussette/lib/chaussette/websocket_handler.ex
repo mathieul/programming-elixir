@@ -3,10 +3,24 @@ defmodule Chaussette.WebsocketHandler do
 
   alias Chaussette.Pubsub
 
-  def websocket_init(_transport_name, req, [ conn: conn ]) do
-    room_id = conn.params[:room_id]
-    if room_id, do: Pubsub.register(room_id, self)
-    { :ok, req, [ room: room_id ] }
+  def init({:tcp, :http}, req, _opts) do
+    { :upgrade, :protocol, :cowboy_websocket, req, fetch_params(req) }
+  end
+
+  defp fetch_params(req) do
+    { query_string, req } = :cowboy_req.qs(req)
+    params = Dynamo.Connection.QueryParser.parse(query_string)
+    { params, _req } = Dynamo.Cowboy.BodyParser.parse(params, req)
+    params
+  end
+
+  def websocket_init(_transport_name, req, params) do
+    if (room_id = params[:room_id]) do
+      Pubsub.register(room_id, self)
+      { :ok, req, params }
+    else
+      { :shutdown, req }
+    end
   end
 
   def websocket_handle( { :text, message }, req, state) do
@@ -19,9 +33,8 @@ defmodule Chaussette.WebsocketHandler do
   end
   def websocket_info(_data, req, state), do: { :ok, req, state }
 
-  def websocket_terminate(_reason, _req, state) do
-    [ room: room ] = state
-    Pubsub.unregister(room, self)
+  def websocket_terminate(_reason, _req, params) do
+    Pubsub.unregister(params[:room_id], self)
     :ok
   end
 end

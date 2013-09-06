@@ -15,6 +15,4 @@ defmodule ApplicationRouter do
       conn.resp 406, "Not Acceptable"
     end
   end
-
-  websocket "/web-socket", using: Chaussette.WebsocketHandler
 end
