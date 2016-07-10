@@ -5,8 +5,12 @@ defmodule Docs.UserSocket do
   channel "documents:*", Docs.DocumentChannel
 
   ## Transports
-  transport :websocket, Phoenix.Transports.WebSocket
-  # transport :longpoll, Phoenix.Transports.LongPoll
+  transport :websocket, Phoenix.Transports.WebSocket,
+    check_origin: false,
+    transport_log: :info
+  transport :longpoll, Phoenix.Transports.LongPoll,
+    check_origin: false,
+    transport_log: :info
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

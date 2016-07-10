@@ -1,9 +1,10 @@
 import "phoenix_html"
-import {Socket} from "phoenix"
+import { Socket, LongPoll } from "phoenix"
 
 const App = {
   init() {
     const socket = new Socket("/socket", {
+      // transport: LongPoll,
       // logger: (kind, message, data) => console.log(`${kind}: ${message}`, data)
     })
     const editor = new Quill("#editor")
