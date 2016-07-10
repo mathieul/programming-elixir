@@ -36,6 +36,11 @@ const App = {
     const documentId = $(editor.container).data('document-id')
     let docChannel = socket.channel(`documents:${documentId}`)
 
+    docChannel.on("insert_image", ({url, start, end}) => {
+      // editor.deleteText(start, end)
+      editor.insertEmbed(end, 'image', url)
+    })
+
     docChannel.on("text_change", ({delta}) => {
       editor.updateContents(delta)
     })
@@ -45,6 +50,13 @@ const App = {
     })
 
     // push events
+    $(editor.container).on("keydown", event => {
+      if (event.which !== 13 || !event.metaKey) { return }
+
+      const {start, end} = editor.getSelection()
+      const expr = editor.getText(start, end)
+      docChannel.push("compute_image", {expr, start, end})
+    })
     editor.on("text-change", (delta, source) => {
       if (source !== 'user') { return }
 

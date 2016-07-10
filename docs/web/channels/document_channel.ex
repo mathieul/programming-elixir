@@ -46,4 +46,16 @@ defmodule Docs.DocumentChannel do
         {:reply, {:error, %{errors: changeset}}, socket}
     end
   end
+
+  def handle_in("compute_image", params, socket) do
+    image_url = "https://photos.smugmug.com/Travel/Asia/Bali/i-nn5b9Xs/0/1780x1781/IMG_0007-1780x1781.jpg"
+
+    broadcast! socket, "insert_image", %{
+      url: image_url,
+      start: params["start"],
+      end: params["end"]
+    }
+
+    {:reply, :ok, socket}
+  end
 end
