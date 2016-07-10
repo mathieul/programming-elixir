@@ -30,6 +30,10 @@ const App = {
       this.appendMessage(msgContainer, message)
     })
 
+    docChannel.on("presence_state", response => {
+      debugger
+    })
+
     // push events
     $(editor.container).on("keydown", event => {
       if (event.which !== 13 || !event.metaKey) { return }

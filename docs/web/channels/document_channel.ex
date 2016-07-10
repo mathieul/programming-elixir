@@ -11,7 +11,17 @@ defmodule Docs.DocumentChannel do
                         select: %{id: m.id, body: m.body},
                         limit: 100) |> Enum.reverse
 
+    send(self, :after_join)
     {:ok, %{messages: messages}, socket}
+  end
+
+  def handle_info(:after_join, socket) do
+    push socket, "presence_state", Presence.list(socket)
+    # require IEx; IEx.pry
+    {:ok, _} = Presence.track(socket, socket.assigns.user, %{
+      online_at: inspect(System.system_time(:seconds))
+    })
+    {:noreply, socket}
   end
 
   def handle_in("text_change", %{"delta" => delta}, socket) do

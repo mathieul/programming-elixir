@@ -8,10 +8,9 @@ defmodule Docs do
 
     # Define workers and child supervisors to be supervised
     children = [
-      # Start the Ecto repository
       supervisor(Docs.Repo, []),
-      # Start the endpoint when the application starts
       supervisor(Docs.Endpoint, []),
+      supervisor(Docs.Presence, []),
       # Start your own worker by calling: Docs.Worker.start_link(arg1, arg2, arg3)
       # worker(Docs.Worker, [arg1, arg2, arg3]),
     ]

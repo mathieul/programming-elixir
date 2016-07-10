@@ -68,6 +68,7 @@ defmodule Docs.Web do
       alias Docs.Repo
       alias Docs.Document
       alias Docs.Message
+      alias Docs.Presence
       import Ecto
       import Ecto.Query
       import Docs.Gettext

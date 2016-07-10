@@ -5,6 +5,7 @@ defmodule Docs.Authentication do
     do: PlugBasicAuth.init(opts)
 
   def call(conn, opts) do
+    IO.inspect [options: opts]
     case PlugBasicAuth.call(conn, opts) do
       %Plug.Conn{halted: true} = conn ->
         conn
