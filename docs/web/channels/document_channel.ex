@@ -1,5 +1,6 @@
 defmodule Docs.DocumentChannel do
   use Docs.Web, :channel
+  import SweetXml
 
   def join("documents:" <> document_id, _params, socket) do
     socket = assign(socket, :document_id, document_id)
@@ -48,7 +49,18 @@ defmodule Docs.DocumentChannel do
   end
 
   def handle_in("compute_image", params, socket) do
-    image_url = "https://photos.smugmug.com/Travel/Asia/Bali/i-nn5b9Xs/0/1780x1781/IMG_0007-1780x1781.jpg"
+    input = URI.encode(params["expression"])
+    url = String.to_char_list(
+      "http://api.wolframalpha.com/v2/query" <>
+      "?appid=#{app_id}" <>
+      "&input=#{input}&format=image,plaintext"
+    )
+    {:ok, {_, _, body}} = :httpc.request(url)
+
+    image_url =
+      body
+      |> xpath(~x"/queryresult/pod[2]/subpod/img/@src")
+      |> to_string
 
     broadcast! socket, "insert_image", %{
       url: image_url,
@@ -58,4 +70,7 @@ defmodule Docs.DocumentChannel do
 
     {:reply, :ok, socket}
   end
+
+  defp app_id,
+    do: Dict.fetch!(Application.get_env(:docs, :wolfram), :app_id)
 end
