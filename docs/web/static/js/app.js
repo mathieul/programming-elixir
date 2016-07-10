@@ -30,6 +30,22 @@ const App = {
 
     const documentId = $(editor.container).data('document-id')
     let docChannel = socket.channel(`documents: ${documentId}`)
+
+    docChannel.on("text_change", ({delta}) => {
+      editor.updateContents(delta)
+    })
+
+    // push events
+    editor.on("text-change", (delta, source) => {
+      if (source !== 'user') { return }
+
+      docChannel.push("text_change", {delta: delta})
+    })
+
+    docChannel
+      .join()
+      .receive("ok", response => console.log("joined!", response))
+      .receive("error", error => console.log("join error", error))
   }
 }
 
