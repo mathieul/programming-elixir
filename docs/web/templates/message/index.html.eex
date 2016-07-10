@@ -12,7 +12,7 @@
   <tbody>
 <%= for message <- @messages do %>
     <tr>
-      <td><%= message.document_id %></td>
+      <td><%= message.document.title %></td>
       <td><%= message.body %></td>
 
     </tr>

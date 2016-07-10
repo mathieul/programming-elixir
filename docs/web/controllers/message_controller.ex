@@ -8,7 +8,7 @@ defmodule Docs.MessageController do
 
   def index(conn, _params) do
     document = conn.assigns.document
-    messages = Repo.all(from m in assoc(document, :messages))
+    messages = Repo.all(from m in assoc(document, :messages), preload: [:document])
     render(conn, "index.html", messages: messages)
   end
 

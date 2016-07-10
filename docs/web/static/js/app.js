@@ -19,3 +19,18 @@ import "phoenix_html"
 // paths "./socket" or full ones "web/static/js/socket".
 
 // import socket from "./socket"
+
+import {Socket} from "phoenix"
+
+const App = {
+  init() {
+    const socket = new Socket("/socket")
+    const editor = new Quill("#editor")
+    socket.connect()
+
+    const documentId = $(editor.container).data('document-id')
+    let docChannel = socket.channel(`documents: ${documentId}`)
+  }
+}
+
+App.init()
