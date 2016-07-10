@@ -3,6 +3,7 @@ defmodule Docs.DocumentChannel do
   import SweetXml
 
   def join("documents:" <> document_id, _params, socket) do
+    IO.puts "<<<JOIN>>>: user_id=#{inspect socket.assigns.user}"
     socket = assign(socket, :document_id, document_id)
     messages = Repo.all(from m in Message,
                         where: m.document_id == ^document_id,

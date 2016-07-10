@@ -6,6 +6,7 @@ const App = {
     const socket = new Socket("/socket", {
       // transport: LongPoll,
       // logger: (kind, message, data) => console.log(`${kind}: ${message}`, data)
+      params: {user_token: window.userToken}
     })
     const editor = new Quill("#editor")
     const msgContainer = $('#messages')
