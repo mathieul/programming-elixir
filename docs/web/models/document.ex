@@ -15,7 +15,7 @@ defmodule Docs.Document do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:body, :title])
-    |> validate_required([:body, :title])
+    |> validate_required([:body])
     |> validate_length(:title, min: 3)
   end
 end
